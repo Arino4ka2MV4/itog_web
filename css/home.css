@@ -146,18 +146,18 @@
 
 .stat-item {
     padding: 1.5rem;
+    color: white;
 }
 
 .stat-number {
     font-size: 3rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
-    color: #1E40AF !important;
 }
 
 .stat-label {
     font-size: 1.1rem;
-    color: var(--text-secondary);
+    color: white;
 }
 
 /* Home Page Responsive */
