@@ -102,15 +102,15 @@ class QuizManager {
                     
                     <div class="quiz-card-features">
                         <div class="feature-tag">
-                            <span>📊</span>
+                            <span>●</span>
                             <span>${quiz.questions.length} вопросов</span>
                         </div>
                         <div class="feature-tag">
-                            <span>⏱️</span>
+                            <span>●</span>
                             <span>${Utils.formatTime(quiz.duration)}</span>
                         </div>
                         <div class="feature-tag highlight">
-                            <span>⭐</span>
+                            <span>●</span>
                             <span>Макс. ${quiz.questions.reduce((sum, q) => sum + q.points, 0)} баллов</span>
                         </div>
                     </div>
@@ -131,20 +131,20 @@ class QuizManager {
                 <div class="quiz-card-footer">
                     <div class="quiz-stats">
                         <div class="quiz-stat">
-                            <span class="icon">❓</span>
+                            <span class="icon">●</span>
                             <span>${quiz.questions.length} в.</span>
                         </div>
                         <div class="quiz-stat">
-                            <span class="icon">⏱️</span>
+                            <span class="icon">●</span>
                             <span>${Utils.formatTime(quiz.duration)}</span>
                         </div>
                         <div class="quiz-stat">
-                            <span class="icon">🎯</span>
+                            <span class="icon">●</span>
                             <span>${this.getDifficultyIcon(quiz.difficulty)}</span>
                         </div>
                     </div>
                     <button class="quiz-card-button start-quiz-btn" data-quiz-id="${quiz.id}">
-                        <span>🚀</span>
+                        <span>●</span>
                         ${userProgress ? 'Продолжить' : 'Начать тест'}
                     </button>
                 </div>
@@ -157,7 +157,7 @@ class QuizManager {
         this.attachQuizButtonHandlers();
     }
 
-    // Новые вспомогательные методы для QuizManager
+    // Вспомогательные методы для QuizManager
     getUserProgress(quizId) {
         const results = Utils.getFromLocalStorage('quizResults') || [];
         return results.find(result => result.quizId === quizId);
@@ -257,8 +257,10 @@ class QuizManager {
         document.getElementById('quiz-title').textContent = this.currentQuiz.title;
         
         // Обновляем счетчик вопросов
-        document.getElementById('question-counter').innerHTML = 
-            `<span class="meta-icon">❓</span> Вопрос ${this.currentQuestionIndex + 1} из ${this.currentQuiz.questions.length}`;
+        const questionCounter = document.getElementById('question-counter');
+        if (questionCounter) {
+            questionCounter.innerHTML = `<span class="meta-icon">●</span> Вопрос ${this.currentQuestionIndex + 1} из ${this.currentQuiz.questions.length}`;
+        }
         
         // Обновляем текст вопроса
         document.getElementById('question-text').textContent = question.text;
@@ -284,6 +286,8 @@ class QuizManager {
 
     renderOptions(question) {
         const optionsContainer = document.getElementById('options-container');
+        if (!optionsContainer) return;
+
         optionsContainer.innerHTML = '';
 
         question.options.forEach((option, index) => {
@@ -312,7 +316,10 @@ class QuizManager {
         });
         
         // Выделение выбранного варианта
-        document.querySelectorAll('.option')[answerIndex].classList.add('selected');
+        const selectedOption = document.querySelectorAll('.option')[answerIndex];
+        if (selectedOption) {
+            selectedOption.classList.add('selected');
+        }
         
         // Автоматическое продвижение вперед на мобильных устройствах
         if (MobileHelper.isMobile() && this.currentQuestionIndex < this.currentQuiz.questions.length - 1) {
@@ -468,11 +475,16 @@ class QuizManager {
     }
 
     updateResultsStats(results) {
+        const totalTestsElement = document.getElementById('total-tests');
+        const averageScoreElement = document.getElementById('average-score');
+        const bestScoreElement = document.getElementById('best-score');
+        const totalAnsweredElement = document.getElementById('total-answered');
+
         if (results.length === 0) {
-            document.getElementById('total-tests').textContent = '0';
-            document.getElementById('average-score').textContent = '0';
-            document.getElementById('best-score').textContent = '0';
-            document.getElementById('total-answered').textContent = '0';
+            if (totalTestsElement) totalTestsElement.textContent = '0';
+            if (averageScoreElement) averageScoreElement.textContent = '0';
+            if (bestScoreElement) bestScoreElement.textContent = '0';
+            if (totalAnsweredElement) totalAnsweredElement.textContent = '0';
             return;
         }
 
@@ -482,10 +494,10 @@ class QuizManager {
         const bestScore = Math.max(...results.map(result => result.score));
         const totalAnswered = results.reduce((sum, result) => sum + result.totalQuestions, 0);
 
-        document.getElementById('total-tests').textContent = totalTests;
-        document.getElementById('average-score').textContent = averageScore;
-        document.getElementById('best-score').textContent = bestScore;
-        document.getElementById('total-answered').textContent = totalAnswered;
+        if (totalTestsElement) totalTestsElement.textContent = totalTests;
+        if (averageScoreElement) averageScoreElement.textContent = averageScore;
+        if (bestScoreElement) bestScoreElement.textContent = bestScore;
+        if (totalAnsweredElement) totalAnsweredElement.textContent = totalAnswered;
     }
 
     updateHomeStats() {
@@ -506,7 +518,10 @@ class QuizManager {
 
     updateNavigation() {
         // Обновляем активную страницу в навигации
-        const currentPage = document.querySelector('.page.active').id.replace('-page', '');
+        const currentPageElement = document.querySelector('.page.active');
+        if (!currentPageElement) return;
+
+        const currentPage = currentPageElement.id.replace('-page', '');
         document.querySelectorAll('.nav-link').forEach(link => {
             link.classList.remove('active');
             if (link.dataset.page === `${currentPage}-page`) {
@@ -526,7 +541,7 @@ class QuizManager {
         errorDiv.className = 'error-message';
         errorDiv.innerHTML = `
             <div class="error-content">
-                <span class="error-icon">⚠️</span>
+                <span class="error-icon">●</span>
                 <span>${message}</span>
             </div>
         `;
@@ -584,9 +599,14 @@ function restartQuiz() {
 
 // Функции для работы с фильтрами
 function resetFilters() {
-    document.getElementById('category-filter').value = 'all';
-    document.getElementById('difficulty-filter').value = 'all';
-    document.getElementById('sort-filter').value = 'default';
+    const categoryFilter = document.getElementById('category-filter');
+    const difficultyFilter = document.getElementById('difficulty-filter');
+    const sortFilter = document.getElementById('sort-filter');
+    
+    if (categoryFilter) categoryFilter.value = 'all';
+    if (difficultyFilter) difficultyFilter.value = 'all';
+    if (sortFilter) sortFilter.value = 'default';
+    
     quizManager.renderQuizzes();
 }
 
@@ -596,3 +616,33 @@ function scrollToTop() {
         behavior: 'smooth'
     });
 }
+
+// Добавляем CSS для анимаций уведомлений
+const notificationStyles = document.createElement('style');
+notificationStyles.textContent = `
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideOutRight {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+    
+    .timer-warning {
+        color: #E53E3E;
+        font-weight: bold;
+    }
+    
+    .error-content {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .error-icon {
+        font-size: 1.2rem;
+    }
+`;
+document.head.appendChild(notificationStyles);
