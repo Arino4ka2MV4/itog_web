@@ -86,6 +86,7 @@ class Utils {
         }
     }
 
+    // перетасовка вопросов 
     static shuffleArray(array) {
         const shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {

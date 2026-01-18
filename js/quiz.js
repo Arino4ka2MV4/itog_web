@@ -34,6 +34,7 @@ class QuizManager {
         }
     }
 
+    // метод отображения квизов 
     renderQuizzes() {
         const container = document.getElementById('quizzes-container');
         if (!container) return;
@@ -157,12 +158,14 @@ class QuizManager {
         this.attachQuizButtonHandlers();
     }
 
-    // Вспомогательные методы для QuizManager
+    // Вспомогательные методы для QuizManager 
+    // получение прогресса пользователя 
     getUserProgress(quizId) {
         const results = Utils.getFromLocalStorage('quizResults') || [];
         return results.find(result => result.quizId === quizId);
     }
 
+    // получение класса сложности 
     getDifficultyClass(difficulty) {
         switch (difficulty) {
             case 'Начальный': return 'difficulty-beginner';
@@ -172,6 +175,8 @@ class QuizManager {
         }
     }
 
+    
+    // получение иконки сложности 
     getDifficultyIcon(difficulty) {
         switch (difficulty) {
             case 'Начальный': return 'Легко';
@@ -181,6 +186,7 @@ class QuizManager {
         }
     }
 
+    // обработчик кнопки квиза 
     attachQuizButtonHandlers() {
         document.querySelectorAll('.start-quiz-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -211,6 +217,7 @@ class QuizManager {
         if (totalQuestionsElement) totalQuestionsElement.textContent = totalQuestions;
     }
 
+    // начало квиза
     startQuiz(quiz) {
         this.currentQuiz = quiz;
         this.currentQuestionIndex = 0;
@@ -248,6 +255,7 @@ class QuizManager {
         this.updateNavigation();
     }
 
+    // отображение текущего вопроса 
     showCurrentQuestion() {
         if (!this.currentQuiz) return;
 
@@ -284,6 +292,7 @@ class QuizManager {
         this.updateControlButtons();
     }
 
+    // отображение вариантов ответов
     renderOptions(question) {
         const optionsContainer = document.getElementById('options-container');
         if (!optionsContainer) return;
@@ -307,6 +316,7 @@ class QuizManager {
         });
     }
 
+    // метод выбора варианта ответа
     selectAnswer(answerIndex) {
         this.userAnswers[this.currentQuestionIndex] = answerIndex;
         
@@ -329,6 +339,7 @@ class QuizManager {
         }
     }
 
+    // метод получения следующего вопроса
     nextQuestion() {
         if (this.currentQuestionIndex < this.currentQuiz.questions.length - 1) {
             this.currentQuestionIndex++;
@@ -336,6 +347,7 @@ class QuizManager {
         }
     }
 
+    // метод получения предыдущего вопроса
     previousQuestion() {
         if (this.currentQuestionIndex > 0) {
             this.currentQuestionIndex--;
@@ -343,6 +355,7 @@ class QuizManager {
         }
     }
 
+    // обновление кнопок управления
     updateControlButtons() {
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
@@ -361,6 +374,7 @@ class QuizManager {
         }
     }
 
+    // подтверждение и отправка завершенного квиза
     submitQuiz() {
         if (this.userAnswers.includes(null)) {
             const unanswered = this.userAnswers.filter(answer => answer === null).length;
@@ -372,6 +386,7 @@ class QuizManager {
         this.finishQuiz();
     }
 
+    // завершение квиза
     finishQuiz() {
         if (this.timer) {
             this.timer.stop();
@@ -383,6 +398,7 @@ class QuizManager {
         this.showResults();
     }
 
+    // подсчет очков
     calculateScore() {
         this.score = 0;
         this.currentQuiz.questions.forEach((question, index) => {
@@ -392,6 +408,7 @@ class QuizManager {
         });
     }
 
+    // сохранение результатов
     saveResults() {
         const timeSpent = Math.floor((Date.now() - this.startTime) / 1000);
         const results = Utils.getFromLocalStorage('quizResults') || [];
@@ -414,11 +431,13 @@ class QuizManager {
         Utils.saveToLocalStorage('quizResults', results);
     }
 
+    // отображение результатов
     showResults() {
         showPage('results-page');
         this.renderResultsHistory();
     }
 
+    // тут метод отображения создается, а выше вызывается
     renderResultsHistory() {
         const resultsList = document.getElementById('results-list');
         const noResults = document.getElementById('no-results');
@@ -474,6 +493,7 @@ class QuizManager {
         this.updateResultsStats(results);
     }
 
+    // обновление результата 
     updateResultsStats(results) {
         const totalTestsElement = document.getElementById('total-tests');
         const averageScoreElement = document.getElementById('average-score');
@@ -500,6 +520,7 @@ class QuizManager {
         if (totalAnsweredElement) totalAnsweredElement.textContent = totalAnswered;
     }
 
+    // обнолвение статистики
     updateHomeStats() {
         const totalTests = this.quizzes.length;
         const totalQuestions = this.quizzes.reduce((sum, quiz) => sum + quiz.questions.length, 0);
@@ -516,6 +537,7 @@ class QuizManager {
         }
     }
 
+    // обновление навигации
     updateNavigation() {
         // Обновляем активную страницу в навигации
         const currentPageElement = document.querySelector('.page.active');
@@ -530,12 +552,14 @@ class QuizManager {
         });
     }
 
+    // склонение слова - изменение суффикса 
     getPointsSuffix(points) {
         if (points === 1) return '';
         if (points >= 2 && points <= 4) return 'а';
         return 'ов';
     }
 
+    // отображение ошибки 
     showError(message) {
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';

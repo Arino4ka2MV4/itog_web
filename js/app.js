@@ -5,7 +5,7 @@ class App {
         this.isInitialized = false;
         this.init();
     }
-
+    // метод который вызывается в самом начале 
     async init() {
         try {
             // Инициализация помощников
@@ -35,6 +35,7 @@ class App {
         }
     }
 
+    // метод обработки кликов по навигации
     setupNavigation() {
         // Обработка кликов по навигационным ссылкам
         document.querySelectorAll('.nav-link').forEach(link => {
@@ -66,6 +67,7 @@ class App {
         });
     }
 
+    // метод фильтрации квизов
     setupQuizFilters() {
         const categoryFilter = document.getElementById('category-filter');
         const difficultyFilter = document.getElementById('difficulty-filter');
@@ -90,6 +92,7 @@ class App {
         }
     }
 
+    // обработчики событий 
     setupEventListeners() {
         // Обработка изменения размера окна
         window.addEventListener('resize', Utils.debounce(() => {
@@ -117,6 +120,7 @@ class App {
         });
     }
 
+    // показывает конкретную страницу по ее ид 
     showPage(pageId) {
         // Скрыть все страницы
         document.querySelectorAll('.page').forEach(page => {
@@ -143,6 +147,7 @@ class App {
         }
     }
 
+    // смена страниц
     handlePageChange(pageId) {
         switch (pageId) {
             case 'results-page':
@@ -158,6 +163,7 @@ class App {
         }
     }
 
+    // обновление навигации
     updateNavigation() {
         const currentPage = this.currentPage.replace('-page', '');
         
@@ -169,6 +175,7 @@ class App {
         });
     }
 
+    // метод вкл мобильного менб (бургер)
     toggleMobileMenu() {
         const navLinks = document.getElementById('nav-links');
         const menuBtn = document.getElementById('mobile-menu-btn');
@@ -182,6 +189,7 @@ class App {
         }
     }
 
+    // метод выкл мобильного менб (бургер)
     closeMobileMenu() {
         const navLinks = document.getElementById('nav-links');
         const menuBtn = document.getElementById('mobile-menu-btn');
@@ -193,6 +201,7 @@ class App {
         }
     }
 
+    // обработчик изменения размеров окна 
     handleResize() {
         // Закрываем мобильное меню при увеличении экрана
         if (window.innerWidth > 768) {
@@ -205,6 +214,7 @@ class App {
         }
     }
 
+    // обработчик нажатия клавиш 
     handleKeydown(e) {
         // Глобальные горячие клавиши
         switch (e.key) {
@@ -219,6 +229,7 @@ class App {
         }
     }
 
+    // обработка нажатия на кнопки в викторине 
     handleQuizKeys(e) {
         if (e.key >= '1' && e.key <= '4') {
             // Выбор ответа цифрами 1-4
@@ -246,6 +257,7 @@ class App {
         }
     }
 
+    // восстановление состояния приложения
     restoreAppState() {
         // Восстановление последней страницы
         const lastPage = Utils.getFromLocalStorage('currentPage') || 'home-page';
@@ -258,6 +270,7 @@ class App {
         }
     }
 
+    // метод отображения критической ошибки 
     showFatalError() {
         const errorHtml = `
             <div style="
